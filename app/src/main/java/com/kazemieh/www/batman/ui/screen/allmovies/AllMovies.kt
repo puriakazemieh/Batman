@@ -1,4 +1,4 @@
-package com.kazemieh.www.batman.ui.screen.movies
+package com.kazemieh.www.batman.ui.screen.allmovies
 
 import android.util.Log
 import androidx.compose.foundation.Image
@@ -53,18 +53,16 @@ fun AllMovies(
     }
 
     LaunchedEffect(key1 = true) {
-        viewModel.getAllMovies.collectLatest { amazingItemResult ->
-            Log.d("949494", "AmazingOfferSection: $amazingItemResult")
-            when (amazingItemResult) {
+        viewModel.getAllMovies.collectLatest { allMovesListResult ->
+            Log.d("949494", "AmazingOfferSection: $allMovesListResult")
+            when (allMovesListResult) {
                 is ApiResult.Success -> {
-                    amazingItemResult.data.collectLatest {
-                        allMovesList = it
-                    }
+                    allMovesList = allMovesListResult.data
 //                    Log.d("TAG", "AmazingOfferSection: $amazingItemList")
                 }
 
                 is ApiResult.Error -> {
-//                    Log.d("TAG", "AmazingOfferSection: ${amazingItemResult} ")
+//                    Log.d("TAG", "AmazingOfferSection: ${allMovesListResult} ")
                 }
 
                 is ApiResult.Loading -> {

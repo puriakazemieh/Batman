@@ -2,21 +2,14 @@ package com.kazemieh.www.batman.data.repository
 
 import com.kazemieh.www.batman.data.db.MovieDao
 import com.kazemieh.www.batman.data.remote.BatmanApiService
-import com.kazemieh.www.batman.data.remote.model.toAllMoves
-import com.kazemieh.www.batman.data.remote.model.toMovie
 import com.kazemieh.www.batman.data.remote.model.toMovieEntity
 import com.kazemieh.www.batman.domin.ApiResult
 import com.kazemieh.www.batman.domin.BatmanRepository
-import com.kazemieh.www.batman.domin.model.Movie
 import com.kazemieh.www.batman.domin.model.AllMoves
+import com.kazemieh.www.batman.domin.model.Movie
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.currentCoroutineContext
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -42,27 +35,29 @@ class BatmanRepositoryImpl @Inject constructor(
             doWithNetwork {
                 CoroutineScope(currentCoroutineContext()).launch {
                     batmanApiService.getAllBatmanMovies("3e974fca", "batman").Search.map {
-                        batmanDp.insertMovie(it.toMovieEntity())
-//                        it.toAllMoves()
+                        batmanDp.insertAllMovie(it.toMovieEntity())
                     }
                 }
             }
+        }.catch {
+            ApiResult.Error(Exception(it))
         }
-    /* {
-         doWithNetwork {
-             return batmanApiService.getAllBatmanMovies("3e974fca", "batman").Search.map {
-                 batmanDp.insertMovie(it.toMovieEntity())
-                 it.toAllMoves()
-             }
-         }
- //        batmanDp.getAllMovie()
- //        return emptyList()
-     }*/
 
 
-    override suspend fun getMovieById(id: String): Flow<Movie> {
-//        batmanDp.getMovie(id)
-        return flow { batmanApiService.getMoveById(apikey = "3e974fca", id = id).toMovie() }
+    override suspend fun getMovieById(id: String): Flow<ApiResult<Movie>> {
+        return flow<ApiResult<Movie>> {
+            ApiResult.Success(batmanDp.getMovie(id))
+        }.onStart {
+            doWithNetwork {
+                CoroutineScope(currentCoroutineContext()).launch {
+                    batmanApiService.getMoveById(apikey = "3e974fca", id = id).let {
+                        batmanDp.insertMovie(it.toMovieEntity())
+                    }
+                }
+            }
+        }.catch {
+            ApiResult.Error(Exception(it))
+        }
     }
 
 }

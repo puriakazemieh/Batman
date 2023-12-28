@@ -7,7 +7,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.kazemieh.www.batman.ui.screen.movie.Movie
-import com.kazemieh.www.batman.ui.screen.movies.AllMovies
+import com.kazemieh.www.batman.ui.screen.allmovies.AllMovies
 import com.kazemieh.www.batman.ui.screen.splash.SplashScreen
 
 

@@ -11,8 +11,5 @@ data class MoviesResponse(
     val imdbID: String
 )
 
-fun MoviesResponse.toAllMoves() =
-    AllMoves(title = Title, imdbID = imdbID, poster = Poster, type = Type, year = Year)
-
 fun MoviesResponse.toMovieEntity() =
     MovieEntity(title = Title, imdbID = imdbID, poster = Poster, type = Type, year = Year)

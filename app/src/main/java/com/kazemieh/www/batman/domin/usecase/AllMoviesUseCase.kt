@@ -9,7 +9,7 @@ import javax.inject.Inject
 class AllMoviesUseCase @Inject constructor(
     private val batmanRepository: BatmanRepositoryImpl
 ) : BaseUseCase<Unit, ApiResult<List<AllMoves>>> () {
-    override suspend fun execute(parameters: Unit): Flow<ApiResult<List<AllMoves>> {
+    override suspend fun execute(parameters: Unit): Flow<ApiResult<List<AllMoves>>> {
         return batmanRepository.getAllMovies()
     }
 }

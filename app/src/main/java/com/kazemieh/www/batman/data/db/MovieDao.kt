@@ -11,6 +11,9 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface MovieDao {
 
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertAllMovie(item: MovieEntity)
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertMovie(item: MovieEntity)
 
@@ -82,7 +85,7 @@ interface MovieDao {
     val imdbVotes: String? = null*/
 
     @Query("select * from movie where imdbID=:id")
-    fun getMovie(id: Int): Flow<MovieEntity>
+    fun getMovie(id: String): Flow<MovieEntity>
 
     @Delete
     suspend fun removeMovie(movie: MovieEntity)

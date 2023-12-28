@@ -25,3 +25,8 @@ val ColorScheme.black40: Color
 val ColorScheme.white60: Color
     @Composable
     get() = Color(0x99FFFFFF)
+
+
+val ColorScheme.gray: Color
+    @Composable
+    get() = Color(0xFFF1F0EE)
