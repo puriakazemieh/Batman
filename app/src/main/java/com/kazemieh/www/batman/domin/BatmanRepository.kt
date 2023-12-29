@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface BatmanRepository {
 
-    suspend fun getAllMovies(): Flow<ApiResult<List<AllMoves>>>
+    suspend fun getAllMovies(): Flow<List<AllMoves>>
     suspend fun getMovieById(id: String):  Flow<ApiResult<Movie>>
 
 }

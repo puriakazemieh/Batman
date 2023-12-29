@@ -3,6 +3,7 @@ package com.kazemieh.www.batman.di
 import android.content.Context
 import androidx.room.Room
 import com.kazemieh.www.batman.data.db.BatmanDatabase
+import com.kazemieh.www.batman.data.db.BatmanRatingConverter
 import com.kazemieh.www.batman.data.db.MovieDao
 import dagger.Module
 import dagger.Provides
@@ -16,13 +17,14 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object DataBaseModule {
 
+
     @Singleton
     @Provides
-    fun provideRoutaaDatabase(@ApplicationContext app: Context) =
+    fun provideBatmanDatabase(@ApplicationContext app: Context) =
         Room.databaseBuilder(app, BatmanDatabase::class.java, "batman.db")
+            .addTypeConverter(BatmanRatingConverter())
             .allowMainThreadQueries()
             .build()
-
 
 
     @Provides

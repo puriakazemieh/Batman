@@ -1,5 +1,6 @@
 package com.kazemieh.www.batman.data.repository
 
+import android.util.Log
 import com.kazemieh.www.batman.data.db.MovieDao
 import com.kazemieh.www.batman.data.remote.BatmanApiService
 import com.kazemieh.www.batman.data.remote.model.toMovieEntity
@@ -8,6 +9,7 @@ import com.kazemieh.www.batman.domin.BatmanRepository
 import com.kazemieh.www.batman.domin.model.AllMoves
 import com.kazemieh.www.batman.domin.model.Movie
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -28,19 +30,36 @@ class BatmanRepositoryImpl @Inject constructor(
     }
 
 
-    override suspend fun getAllMovies(): Flow<ApiResult<List<AllMoves>>> =
-        flow<ApiResult<List<AllMoves>>> {
-            ApiResult.Success(batmanDp.getAllMovie())
+    override suspend fun getAllMovies(): Flow<List<AllMoves>> =
+        flow<List<AllMoves>> {
+//
+//            Log.d("949494", "AmazingOfferSection: flow 1")
+            val data = batmanDp.getAllMovie()
+//            data.collectLatest {
+////                CoroutineScope(Dispatchers.IO).launch {
+////                    this@flow.emit(ApiResult.Success(it))
+////                }
+//                emit(it)
+//                Log.d("949494", "AmazingOfferSection: data= $it")
+//            }
+//            val b=ApiResult.Success(data)
+            data
+//            emit(data)
         }.onStart {
-            doWithNetwork {
-                CoroutineScope(currentCoroutineContext()).launch {
-                    batmanApiService.getAllBatmanMovies("3e974fca", "batman").Search.map {
-                        batmanDp.insertAllMovie(it.toMovieEntity())
-                    }
+//            Log.d("949494", "AmazingOfferSection: onStart 1")
+//            doWithNetwork {
+//                Log.d("949494", "AmazingOfferSection: onStart 2")
+            CoroutineScope(currentCoroutineContext()).launch {
+//                    Log.d("949494", "AmazingOfferSection: onStart 3")
+                batmanApiService.getAllBatmanMovies("3e974fca", "batman").Search.map {
+//                        Log.d("949494", "AmazingOfferSection: it= $it")
+                    batmanDp.insertAllMovie(it.toMovieEntity())
                 }
+//                }
             }
         }.catch {
-            ApiResult.Error(Exception(it))
+            Log.d("949494", "AmazingOfferSection: exeption= $it")
+//            ApiResult.Error(Exception(it))
         }
 
 

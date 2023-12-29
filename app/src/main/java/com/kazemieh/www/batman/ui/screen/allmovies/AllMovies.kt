@@ -40,7 +40,10 @@ import com.kazemieh.www.batman.domin.model.AllMoves
 import com.kazemieh.www.batman.navigation.Screen
 import com.kazemieh.www.batman.ui.theme.cardBackground
 import com.kazemieh.www.batman.ui.theme.white60
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 @Composable
 fun AllMovies(
@@ -52,23 +55,25 @@ fun AllMovies(
         mutableStateOf<List<AllMoves>>(emptyList())
     }
 
-    LaunchedEffect(key1 = true) {
-        viewModel.getAllMovies.collectLatest { allMovesListResult ->
+    LaunchedEffect(key1 = Dispatchers.IO) {
+        viewModel.getAll()
+        viewModel.getAllMovies.collect { allMovesListResult ->
             Log.d("949494", "AmazingOfferSection: $allMovesListResult")
-            when (allMovesListResult) {
-                is ApiResult.Success -> {
-                    allMovesList = allMovesListResult.data
-//                    Log.d("TAG", "AmazingOfferSection: $amazingItemList")
-                }
-
-                is ApiResult.Error -> {
-//                    Log.d("TAG", "AmazingOfferSection: ${allMovesListResult} ")
-                }
-
-                is ApiResult.Loading -> {
-                }
-            }
+//            when (allMovesListResult) {
+//                is ApiResult.Success -> {
+//                    allMovesList = allMovesListResult.data
+////                    Log.d("TAG", "AmazingOfferSection: $amazingItemList")
+//                }
+//
+//                is ApiResult.Error -> {
+////                    Log.d("TAG", "AmazingOfferSection: ${allMovesListResult} ")
+//                }
+//
+//                is ApiResult.Loading -> {
+//                }
+//            }
         }
+
     }
 
 

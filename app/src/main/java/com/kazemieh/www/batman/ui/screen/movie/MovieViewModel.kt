@@ -16,16 +16,15 @@ import javax.inject.Inject
 class MovieViewModel @Inject constructor(private val movieUseCase: MovieUseCase) :
     ViewModel() {
 
-     private var _getMovieById: Flow<ApiResult<Movie>> =
+    private var _getMovieById: Flow<ApiResult<Movie>> =
         MutableStateFlow(ApiResult.Loading)
     val getMovieById: Flow<ApiResult<Movie>> = _getMovieById
 
-    fun getMovieById(id:String){
+    fun getMovieById(id: String) {
         viewModelScope.launch {
-            _getMovieById=(movieUseCase.invoke(id))
+            _getMovieById = (movieUseCase.invoke(id))
         }
     }
-
 
 
 }

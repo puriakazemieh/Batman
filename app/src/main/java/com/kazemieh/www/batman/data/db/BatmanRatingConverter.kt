@@ -12,9 +12,9 @@ class BatmanRatingConverter {
    private val gson = Gson()
 
     @TypeConverter
-    fun storedStringToMyObjects(data: String?): List<DbRating> {
+    fun storedStringToMyObjects(data: String?): List<DbRating>? {
         if (data == null) {
-            return emptyList()
+            return null
         }
         val listType = object : TypeToken<List<DbRating?>?>() {}.type
         return gson.fromJson(data, listType)
