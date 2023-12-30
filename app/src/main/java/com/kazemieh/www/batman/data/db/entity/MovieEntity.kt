@@ -4,6 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
 import com.kazemieh.www.batman.data.db.BatmanRatingConverter
+import com.kazemieh.www.batman.domin.model.Movie
 
 @Entity(tableName = "movie")
 data class MovieEntity(
@@ -34,4 +35,33 @@ data class MovieEntity(
     val year: String? = null,
     val imdbRating: String? = null,
     val imdbVotes: String? = null
+)
+
+
+fun MovieEntity.toMovie() = Movie(
+    imdbID = imdbID,
+    Actors = actors,
+    Awards = awards,
+    BoxOffice = boxOffice,
+    Country = country,
+    DVD = dvd,
+    Director = director,
+    Genre = genre,
+    Language = language,
+    Metascore = metaScore,
+    Plot = plot,
+    Poster = poster,
+    Production = production,
+    Rated = rated,
+    Ratings = ratings?.map { it.toRating() },
+    Released = released,
+    Response = response,
+    Runtime = runtime,
+    Title = title,
+    Type = type,
+    Website = website,
+    Writer = writer,
+    Year = year,
+    imdbRating = imdbRating,
+    imdbVotes = imdbVotes,
 )

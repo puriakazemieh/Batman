@@ -8,5 +8,4 @@ data class RatingResponse(
     val Value: String
 )
 
-fun RatingResponse.toRating()= Rating(Source, Value)
 fun RatingResponse.toDpRating()= DbRating(Source, Value)

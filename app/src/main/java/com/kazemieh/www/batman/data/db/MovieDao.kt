@@ -7,6 +7,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.kazemieh.www.batman.data.db.entity.MovieEntity
 import com.kazemieh.www.batman.domin.model.AllMoves
+import com.kazemieh.www.batman.domin.model.Movie
 import kotlinx.coroutines.flow.Flow
 
 @Dao

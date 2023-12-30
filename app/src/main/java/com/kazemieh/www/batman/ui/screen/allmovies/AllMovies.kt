@@ -56,22 +56,21 @@ fun AllMovies(
     }
 
     LaunchedEffect(key1 = Dispatchers.IO) {
-        viewModel.getAll()
         viewModel.getAllMovies.collect { allMovesListResult ->
-            Log.d("949494", "AmazingOfferSection: $allMovesListResult")
-//            when (allMovesListResult) {
-//                is ApiResult.Success -> {
-//                    allMovesList = allMovesListResult.data
-////                    Log.d("TAG", "AmazingOfferSection: $amazingItemList")
-//                }
-//
-//                is ApiResult.Error -> {
-////                    Log.d("TAG", "AmazingOfferSection: ${allMovesListResult} ")
-//                }
-//
-//                is ApiResult.Loading -> {
-//                }
-//            }
+            Log.d("949494", "allMovesListResult: $allMovesListResult")
+            when (allMovesListResult) {
+                is ApiResult.Success -> {
+                    allMovesList = allMovesListResult.data
+//                    Log.d("TAG", "AmazingOfferSection: $amazingItemList")
+                }
+
+                is ApiResult.Error -> {
+//                    Log.d("TAG", "AmazingOfferSection: ${allMovesListResult} ")
+                }
+
+                is ApiResult.Loading -> {
+                }
+            }
         }
 
     }

@@ -33,34 +33,6 @@ data class MovieResponse(
     val imdbVotes: String? = null
 )
 
-fun MovieResponse.toMovie() = Movie(
-    imdbID = imdbID,
-    Actors = Actors,
-    Awards = Awards,
-    BoxOffice = BoxOffice,
-    Country = Country,
-    DVD = DVD,
-    Director = Director,
-    Genre = Genre,
-    Language = Language,
-    Metascore = Metascore,
-    Plot = Plot,
-    Poster = Poster,
-    Production = Production,
-    Rated = Rated,
-    Ratings = Ratings?.map { it.toRating() },
-    Released = Released,
-    Response = Response,
-    Runtime = Runtime,
-    Title = Title,
-    Type = Type,
-    Website = Website,
-    Writer = Writer,
-    Year = Year,
-    imdbRating = imdbRating,
-    imdbVotes = imdbVotes,
-)
-
 fun MovieResponse.toMovieEntity() = MovieEntity(
     imdbID = imdbID ?: "",
     actors = Actors,
