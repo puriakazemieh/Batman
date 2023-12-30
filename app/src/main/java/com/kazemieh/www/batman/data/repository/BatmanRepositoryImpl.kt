@@ -88,20 +88,16 @@ class BatmanRepositoryImpl @Inject constructor(
     }
 
 
-    override suspend fun getAllMovies(): Flow<List<AllMoves>> =
-        channelFlow {
-            batmanDp.getAllMovie().collectLatest { send(it) }
-        }.onStart {
-            CoroutineScope(currentCoroutineContext()).launch {
-                doWithNetwork {
-                    batmanApiService.getAllBatmanMovies("3e974fca", "batman").Search.map {
-                        batmanDp.insertAllMovie(it.toMovieEntity())
-                    }
+    override suspend fun getAllMovies(): Flow<List<AllMoves>> {
+        CoroutineScope(currentCoroutineContext()).launch {
+            doWithNetwork {
+                batmanApiService.getAllBatmanMovies("3e974fca", "batman").Search.map {
+                    batmanDp.insertAllMovie(it.toMovieEntity())
                 }
             }
-        }.catch {
-            ApiResult.Error(Exception(it))
         }
+        return batmanDp.getAllMovie()
+    }
 
 
     override suspend fun getMovieById(id: String): Flow<Movie> =
@@ -140,7 +136,6 @@ class BatmanRepositoryImpl @Inject constructor(
                             imdbRating = it.imdbRating,
                             imdbVotes = it.imdbVotes,
                         )
-//                        batmanDp.insertMovie(it.toMovieEntity())
                     }
                 }
             }
