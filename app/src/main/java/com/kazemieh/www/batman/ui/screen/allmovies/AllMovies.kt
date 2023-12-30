@@ -57,15 +57,12 @@ fun AllMovies(
 
     LaunchedEffect(key1 = Dispatchers.IO) {
         viewModel.getAllMovies.collect { allMovesListResult ->
-            Log.d("949494", "allMovesListResult: $allMovesListResult")
             when (allMovesListResult) {
                 is ApiResult.Success -> {
                     allMovesList = allMovesListResult.data
-//                    Log.d("TAG", "AmazingOfferSection: $amazingItemList")
                 }
 
                 is ApiResult.Error -> {
-//                    Log.d("TAG", "AmazingOfferSection: ${allMovesListResult} ")
                 }
 
                 is ApiResult.Loading -> {
@@ -125,7 +122,7 @@ fun AllMovies(
                                 Text(
                                     modifier = Modifier.weight(0.85f),
                                     text = it1,
-                                    fontWeight = FontWeight.SemiBold,
+                                    fontWeight = FontWeight.Bold,
                                     maxLines = 1,
                                     overflow = TextOverflow.Ellipsis
                                 )

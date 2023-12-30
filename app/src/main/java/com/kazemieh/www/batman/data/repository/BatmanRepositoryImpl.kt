@@ -5,9 +5,11 @@ import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkCapabilities
 import android.net.NetworkRequest
+import android.util.Log
 import com.kazemieh.www.batman.data.db.MovieDao
 import com.kazemieh.www.batman.data.db.entity.toMovie
 import com.kazemieh.www.batman.data.remote.BatmanApiService
+import com.kazemieh.www.batman.data.remote.model.toDpRating
 import com.kazemieh.www.batman.data.remote.model.toMovieEntity
 import com.kazemieh.www.batman.domin.ApiResult
 import com.kazemieh.www.batman.domin.BatmanRepository
@@ -104,12 +106,41 @@ class BatmanRepositoryImpl @Inject constructor(
 
     override suspend fun getMovieById(id: String): Flow<Movie> =
         channelFlow {
-            batmanDp.getMovie(id).collectLatest { send(it.toMovie()) }
+            batmanDp.getMovie(id).collectLatest {
+                send(it.toMovie())
+            }
         }.onStart {
             CoroutineScope(currentCoroutineContext()).launch {
                 doWithNetwork {
                     batmanApiService.getMoveById(apikey = "3e974fca", id = id).let {
-                        batmanDp.insertMovie(it.toMovieEntity())
+                        batmanDp.updateMovie(
+                            imdbID = it.imdbID,
+                            actors = it.Actors,
+                            awards = it.Awards,
+                            boxOffice = it.BoxOffice,
+                            country = it.Country,
+                            dvd = it.DVD,
+                            director = it.Director,
+                            genre = it.Genre,
+                            language = it.Language,
+                            metaScore = it.Metascore,
+                            plot = it.Plot,
+                            poster = it.Poster,
+                            production = it.Production,
+                            rated = it.Rated,
+                            ratings = it.Ratings?.map { it.toDpRating() },
+                            released = it.Released,
+                            response = it.Response,
+                            runtime = it.Runtime,
+                            title = it.Title,
+                            type = it.Type,
+                            website = it.Website,
+                            writer = it.Writer,
+                            year = it.Year,
+                            imdbRating = it.imdbRating,
+                            imdbVotes = it.imdbVotes,
+                        )
+//                        batmanDp.insertMovie(it.toMovieEntity())
                     }
                 }
             }

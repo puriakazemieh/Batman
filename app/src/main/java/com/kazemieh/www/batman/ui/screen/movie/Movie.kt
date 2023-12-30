@@ -10,11 +10,15 @@ import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
+import com.kazemieh.www.batman.R
 import com.kazemieh.www.batman.domin.ApiResult
 import com.kazemieh.www.batman.domin.model.AllMoves
 import com.kazemieh.www.batman.domin.model.Movie
@@ -52,24 +56,71 @@ fun Movie(
     }
 
     LazyColumn(
-        modifier = Modifier.background(MaterialTheme.colorScheme.surface)
+        modifier = Modifier.background(colorScheme.surface)
     ) {
+        Log.d("949494", "AmazingOfferSection: movie= $movie")
         item {
             Image(
-                painter = rememberAsyncImagePainter(model = movie.Poster),
-                contentDescription = movie.Title
+                painter = rememberAsyncImagePainter(
+                    model = movie.Poster,
+                    placeholder = painterResource(id = R.drawable.ic_launcher_background)
+                ),
+                modifier = Modifier.fillMaxWidth(),
+                contentDescription = movie.Title,
+                contentScale = ContentScale.FillWidth
             )
         }
-        item { movie.Title?.let { Text(text = it) } }
-        item { movie.Plot?.let { Text(text = it) } }
+
+        movie.Title?.let {
+            item {
+                Text(
+                    text = it,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 32 .sp,
+                    modifier = Modifier.padding(8.dp)
+                )
+            }
+        }
+        movie.Plot?.let {
+            item {
+                Text(
+                    text = it,
+                    modifier = Modifier.padding(8.dp)
+                )
+            }
+        }
 
 
-        item { movie.Title?.let { Detail("Title", it) } }
-        item { movie.Title?.let { Detail("Title", it) } }
-        item { movie.Title?.let { Detail("Title", it) } }
-        item { movie.Title?.let { Detail("Title", it) } }
-        item { movie.Title?.let { Detail("Title", it) } }
-        item { movie.Title?.let { Detail("Title", it) } }
+        movie.Actors?.let { item { Detail("Actors:", it) } }
+        movie.Awards?.let { item { Detail("Awards:", it) } }
+        movie.BoxOffice?.let { item { Detail("BoxOffice:", it) } }
+        movie.Country?.let { item { Detail("Country:", it) } }
+        movie.DVD?.let { item { Detail("DVD:", it) } }
+        movie.Director?.let { item { Detail("Director:", it) } }
+        movie.Genre?.let { item { Detail("Genre:", it) } }
+        movie.Language?.let { item { Detail("Language:", it) } }
+        movie.Metascore?.let { item { Detail("Metascore:", it) } }
+        movie.Plot?.let { item { Detail("Plot:", it) } }
+        movie.Poster?.let { item { Detail("Poster:", it) } }
+        movie.Production?.let { item { Detail("Production:", it) } }
+        movie.Rated?.let { item { Detail("Rated:", it) } }
+
+        movie.Ratings?.let {
+            it.forEach { rating ->
+                item { Detail("rating Source: (${rating.Source}):", rating.Value) }
+            }
+        }
+
+        movie.Released?.let { item { Detail("Released:", it) } }
+        movie.Response?.let { item { Detail("Response:", it) } }
+        movie.Runtime?.let { item { Detail("Runtime:", it) } }
+        movie.Title?.let { item { Detail("Title:", it) } }
+        movie.Type?.let { item { Detail("Type:", it) } }
+        movie.Website?.let { item { Detail("Website:", it) } }
+        movie.Writer?.let { item { Detail("Writer:", it) } }
+        movie.Year?.let { item { Detail("Year:", it) } }
+        movie.imdbRating?.let { item { Detail("imdbRating:", it) } }
+        movie.imdbVotes?.let { item { Detail("imdbVotes:", it) } }
 
     }
 }
@@ -100,8 +151,8 @@ fun Detail(key: String, value: String) {
                 )
         ) {
             Text(
+                fontWeight = FontWeight.SemiBold,
                 text = value,
-                fontWeight = FontWeight.Bold,
             )
             Spacer(
                 modifier = Modifier

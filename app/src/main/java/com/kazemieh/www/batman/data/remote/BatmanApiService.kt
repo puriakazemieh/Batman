@@ -13,7 +13,7 @@ interface BatmanApiService {
         @Query("s") s: String
     ): BatmanResponse
 
-    @GET
+    @GET(".")
     suspend fun getMoveById(
         @Query("apikey") apikey: String,
         @Query("i") id: String

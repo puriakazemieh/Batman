@@ -6,7 +6,7 @@ import com.kazemieh.www.batman.domin.model.AllMoves
 import com.kazemieh.www.batman.domin.model.Movie
 
 data class MovieResponse(
-    val imdbID: String? = null,
+    val imdbID: String,
     val Actors: String? = null,
     val Awards: String? = null,
     val BoxOffice: String? = null,
