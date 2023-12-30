@@ -23,12 +23,13 @@ import androidx.navigation.NavHostController
 import com.kazemieh.www.batman.R
 import com.kazemieh.www.batman.ui.commen.Loading3Dots
 import com.kazemieh.www.batman.navigation.Screen
+import kotlinx.coroutines.delay
 
 @Composable
 fun SplashScreen(navController: NavHostController) {
     Splash()
     LaunchedEffect(key1 = true) {
-//        delay(2500)
+        delay(1500)
         navController.navigate(Screen.Movies.route) {
             popUpTo(Screen.Splash.route) {
                 inclusive = true
@@ -46,7 +47,7 @@ fun Splash() {
         contentAlignment = Alignment.Center
     ) {
         Image(
-            painter = painterResource(id = R.drawable.ic_launcher_background),
+            painter = painterResource(id = R.drawable.batman),
             contentDescription = null,
             modifier = Modifier
                 .size(250.dp)

@@ -25,6 +25,7 @@ class MovieViewModel @Inject constructor(private val movieUseCase: MovieUseCase)
     fun getMovieById(id: String) {
         viewModelScope.launch {
             movieUseCase.invoke(id).collectLatest {
+                _getMovieById.emit(ApiResult.Loading)
                 _getMovieById.emit(it)
             }
         }

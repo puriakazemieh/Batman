@@ -9,6 +9,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -22,6 +23,7 @@ import com.kazemieh.www.batman.R
 import com.kazemieh.www.batman.domin.ApiResult
 import com.kazemieh.www.batman.domin.model.AllMoves
 import com.kazemieh.www.batman.domin.model.Movie
+import com.kazemieh.www.batman.ui.commen.Loading3Dots
 import com.kazemieh.www.batman.ui.theme.gray
 import kotlinx.coroutines.flow.collectLatest
 
@@ -35,6 +37,9 @@ fun Movie(
         mutableStateOf(Movie())
     }
 
+    var loading by remember {
+        mutableStateOf(true)
+    }
     LaunchedEffect(key1 = true) {
         viewModel.getMovieById(id = imdbID)
         viewModel.getMovieById.collectLatest { movieResult ->
@@ -42,86 +47,95 @@ fun Movie(
             when (movieResult) {
                 is ApiResult.Success -> {
                     movie = movieResult.data
-//                    Log.d("TAG", "AmazingOfferSection: $amazingItemList")
+                    loading = false
                 }
 
                 is ApiResult.Error -> {
-//                    Log.d("TAG", "AmazingOfferSection: ${movieResult} ")
+                    loading = false
                 }
 
                 is ApiResult.Loading -> {
+                    loading = true
                 }
             }
         }
     }
-
-    LazyColumn(
-        modifier = Modifier.background(colorScheme.surface)
-    ) {
-        Log.d("949494", "AmazingOfferSection: movie= $movie")
-        item {
-            Image(
-                painter = rememberAsyncImagePainter(
-                    model = movie.Poster,
-                    placeholder = painterResource(id = R.drawable.ic_launcher_background)
-                ),
-                modifier = Modifier.fillMaxWidth(),
-                contentDescription = movie.Title,
-                contentScale = ContentScale.FillWidth
-            )
+    if (loading) {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            Loading3Dots()
         }
-
-        movie.Title?.let {
+    } else {
+        LazyColumn(
+            modifier = Modifier.background(colorScheme.surface)
+        ) {
+            Log.d("949494", "AmazingOfferSection: movie= $movie")
             item {
-                Text(
-                    text = it,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 32 .sp,
-                    modifier = Modifier.padding(8.dp)
+                Image(
+                    painter = rememberAsyncImagePainter(
+                        model = movie.Poster,
+                        placeholder = painterResource(id = R.drawable.batman)
+                    ),
+                    modifier = Modifier.fillMaxWidth(),
+                    contentDescription = movie.Title,
+                    contentScale = ContentScale.FillWidth
                 )
             }
-        }
-        movie.Plot?.let {
-            item {
-                Text(
-                    text = it,
-                    modifier = Modifier.padding(8.dp)
-                )
+
+            movie.Title?.let {
+                item {
+                    Text(
+                        text = it,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 32.sp,
+                        modifier = Modifier.padding(8.dp)
+                    )
+                }
             }
-        }
-
-
-        movie.Actors?.let { item { Detail("Actors:", it) } }
-        movie.Awards?.let { item { Detail("Awards:", it) } }
-        movie.BoxOffice?.let { item { Detail("BoxOffice:", it) } }
-        movie.Country?.let { item { Detail("Country:", it) } }
-        movie.DVD?.let { item { Detail("DVD:", it) } }
-        movie.Director?.let { item { Detail("Director:", it) } }
-        movie.Genre?.let { item { Detail("Genre:", it) } }
-        movie.Language?.let { item { Detail("Language:", it) } }
-        movie.Metascore?.let { item { Detail("Metascore:", it) } }
-        movie.Plot?.let { item { Detail("Plot:", it) } }
-        movie.Poster?.let { item { Detail("Poster:", it) } }
-        movie.Production?.let { item { Detail("Production:", it) } }
-        movie.Rated?.let { item { Detail("Rated:", it) } }
-
-        movie.Ratings?.let {
-            it.forEach { rating ->
-                item { Detail("rating Source: (${rating.Source}):", rating.Value) }
+            movie.Plot?.let {
+                item {
+                    Text(
+                        text = it,
+                        modifier = Modifier.padding(8.dp)
+                    )
+                }
             }
+
+
+            movie.Actors?.let { item { Detail("Actors:", it) } }
+            movie.Awards?.let { item { Detail("Awards:", it) } }
+            movie.BoxOffice?.let { item { Detail("BoxOffice:", it) } }
+            movie.Country?.let { item { Detail("Country:", it) } }
+            movie.DVD?.let { item { Detail("DVD:", it) } }
+            movie.Director?.let { item { Detail("Director:", it) } }
+            movie.Genre?.let { item { Detail("Genre:", it) } }
+            movie.Language?.let { item { Detail("Language:", it) } }
+            movie.Metascore?.let { item { Detail("Metascore:", it) } }
+            movie.Plot?.let { item { Detail("Plot:", it) } }
+            movie.Poster?.let { item { Detail("Poster:", it) } }
+            movie.Production?.let { item { Detail("Production:", it) } }
+            movie.Rated?.let { item { Detail("Rated:", it) } }
+
+            movie.Ratings?.let {
+                it.forEach { rating ->
+                    item { Detail("rating Source: (${rating.Source}):", rating.Value) }
+                }
+            }
+
+            movie.Released?.let { item { Detail("Released:", it) } }
+            movie.Response?.let { item { Detail("Response:", it) } }
+            movie.Runtime?.let { item { Detail("Runtime:", it) } }
+            movie.Title?.let { item { Detail("Title:", it) } }
+            movie.Type?.let { item { Detail("Type:", it) } }
+            movie.Website?.let { item { Detail("Website:", it) } }
+            movie.Writer?.let { item { Detail("Writer:", it) } }
+            movie.Year?.let { item { Detail("Year:", it) } }
+            movie.imdbRating?.let { item { Detail("imdbRating:", it) } }
+            movie.imdbVotes?.let { item { Detail("imdbVotes:", it) } }
+
         }
-
-        movie.Released?.let { item { Detail("Released:", it) } }
-        movie.Response?.let { item { Detail("Response:", it) } }
-        movie.Runtime?.let { item { Detail("Runtime:", it) } }
-        movie.Title?.let { item { Detail("Title:", it) } }
-        movie.Type?.let { item { Detail("Type:", it) } }
-        movie.Website?.let { item { Detail("Website:", it) } }
-        movie.Writer?.let { item { Detail("Writer:", it) } }
-        movie.Year?.let { item { Detail("Year:", it) } }
-        movie.imdbRating?.let { item { Detail("imdbRating:", it) } }
-        movie.imdbVotes?.let { item { Detail("imdbVotes:", it) } }
-
     }
 }
 

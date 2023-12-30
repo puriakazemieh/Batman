@@ -38,6 +38,7 @@ import com.kazemieh.www.batman.R
 import com.kazemieh.www.batman.domin.ApiResult
 import com.kazemieh.www.batman.domin.model.AllMoves
 import com.kazemieh.www.batman.navigation.Screen
+import com.kazemieh.www.batman.ui.commen.Loading3Dots
 import com.kazemieh.www.batman.ui.theme.cardBackground
 import com.kazemieh.www.batman.ui.theme.white60
 import kotlinx.coroutines.Dispatchers
@@ -54,86 +55,100 @@ fun AllMovies(
     var allMovesList by remember {
         mutableStateOf<List<AllMoves>>(emptyList())
     }
+    var loading by remember {
+        mutableStateOf(true)
+    }
 
     LaunchedEffect(key1 = Dispatchers.IO) {
         viewModel.getAllMovies.collect { allMovesListResult ->
             when (allMovesListResult) {
                 is ApiResult.Success -> {
                     allMovesList = allMovesListResult.data
+                    loading = false
                 }
 
                 is ApiResult.Error -> {
+                    loading = false
                 }
 
                 is ApiResult.Loading -> {
+                    loading = true
                 }
             }
         }
 
     }
 
-
-    LazyColumn(
-        modifier = Modifier.background(colorScheme.surface)
-    ) {
-        items(allMovesList) {
-            Card(
-                shape = RoundedCornerShape(16.dp),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable {
-                        it.imdbID?.let { it1 -> navController.navigate(Screen.Movie.withArgs(it1)) }
-                    }
-                    .height(300.dp)
-                    .padding(vertical = 8.dp, horizontal = 16.dp),
-                colors = CardDefaults.cardColors(containerColor = colorScheme.cardBackground),
-                elevation = CardDefaults.cardElevation(4.dp)
-            ) {
-                Box(
+    if (loading) {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            Loading3Dots()
+        }
+    } else {
+        LazyColumn(
+            modifier = Modifier.background(colorScheme.surface)
+        ) {
+            items(allMovesList) {
+                Card(
+                    shape = RoundedCornerShape(16.dp),
                     modifier = Modifier
-                        .background(colorScheme.surface)
-                        .fillMaxSize(),
-                    contentAlignment = Alignment.Center
+                        .fillMaxWidth()
+                        .clickable {
+                            it.imdbID?.let { it1 -> navController.navigate(Screen.Movie.withArgs(it1)) }
+                        }
+                        .height(300.dp)
+                        .padding(vertical = 8.dp, horizontal = 16.dp),
+                    colors = CardDefaults.cardColors(containerColor = colorScheme.cardBackground),
+                    elevation = CardDefaults.cardElevation(4.dp)
                 ) {
-                    Image(
-                        painter = rememberAsyncImagePainter(
-                            it.poster,
-                            placeholder = painterResource(id = R.drawable.ic_launcher_background)
-                        ),
-                        contentDescription = "",
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(300.dp),
-                        contentScale = ContentScale.FillWidth,
-                    )
                     Box(
                         modifier = Modifier
+                            .background(colorScheme.surface)
                             .fillMaxSize(),
-                        contentAlignment = Alignment.BottomCenter
+                        contentAlignment = Alignment.Center
                     ) {
-                        Row(
+                        Image(
+                            painter = rememberAsyncImagePainter(
+                                it.poster,
+                                placeholder = painterResource(id = R.drawable.batman)
+                            ),
+                            contentDescription = "",
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .background(colorScheme.white60)
-                                .padding(16.dp),
-                            horizontalArrangement = Arrangement.SpaceBetween
+                                .height(300.dp),
+                            contentScale = ContentScale.FillWidth,
+                        )
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize(),
+                            contentAlignment = Alignment.BottomCenter
                         ) {
-                            it.title?.let { it1 ->
-                                Text(
-                                    modifier = Modifier.weight(0.85f),
-                                    text = it1,
-                                    fontWeight = FontWeight.Bold,
-                                    maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis
-                                )
-                            }
-                            it.year?.let { it1 ->
-                                Text(
-                                    text = it1,
-                                    modifier = Modifier.weight(0.15f),
-                                    maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis
-                                )
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .background(colorScheme.white60)
+                                    .padding(16.dp),
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                it.title?.let { it1 ->
+                                    Text(
+                                        modifier = Modifier.weight(0.85f),
+                                        text = it1,
+                                        fontWeight = FontWeight.Bold,
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis
+                                    )
+                                }
+                                it.year?.let { it1 ->
+                                    Text(
+                                        text = it1,
+                                        modifier = Modifier.weight(0.15f),
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis
+                                    )
+                                }
                             }
                         }
                     }

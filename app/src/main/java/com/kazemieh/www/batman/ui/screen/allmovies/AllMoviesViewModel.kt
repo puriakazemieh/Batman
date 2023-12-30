@@ -6,6 +6,7 @@ import com.kazemieh.www.batman.domin.ApiResult
 import com.kazemieh.www.batman.domin.model.AllMoves
 import com.kazemieh.www.batman.domin.usecase.AllMoviesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -16,13 +17,14 @@ import javax.inject.Inject
 class AllMoviesViewModel @Inject constructor(private val allMoviesUseCase: AllMoviesUseCase) :
     ViewModel() {
 
-    private var _getAllMovies = MutableStateFlow<ApiResult<List<AllMoves>>> (ApiResult.Loading)
+    private var _getAllMovies = MutableStateFlow<ApiResult<List<AllMoves>>>(ApiResult.Loading)
     val getAllMovies: StateFlow<ApiResult<List<AllMoves>>> = _getAllMovies
 
 
     init {
         viewModelScope.launch {
-            allMoviesUseCase.invoke(Unit).collectLatest  {
+            allMoviesUseCase.invoke(Unit).collectLatest {
+                _getAllMovies.emit(ApiResult.Loading)
                 _getAllMovies.emit(it)
             }
         }
